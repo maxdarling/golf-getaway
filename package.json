@@ -1,0 +1,19 @@
+{
+  "name": "golf-getaway",
+  "version": "1.0.0",
+  "description": "A Phaser.js golf game",
+  "main": "game.js",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve . --single"
+  },
+  "dependencies": {
+    "phaser": "^3.70.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  },
+  "keywords": ["phaser", "game", "golf"],
+  "author": "",
+  "license": "MIT"
+}
