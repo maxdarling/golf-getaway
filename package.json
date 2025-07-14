@@ -4,7 +4,7 @@
   "description": "A Phaser.js golf game",
   "main": "game.js",
   "scripts": {
-    "start": "npx serve .",
+    "predev": "npm install",
     "dev": "npx serve . --single"
   },
   "dependencies": {

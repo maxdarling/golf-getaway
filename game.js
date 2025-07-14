@@ -4,7 +4,7 @@ const config = {
     width: 600,
     height: 450,
     parent: 'game',
-    backgroundColor: '#228B22', // Green background
+    backgroundColor: '#228B22', // green
     scene: {
         preload: preload,
         create: create,
@@ -16,15 +16,11 @@ const config = {
 let ball;
 let cursors;
 let ballSpeed = 200;
+let ballAccel = { x: 0, y: 0 };
+let debugText;
 
 // Preload function - loads game assets
 function preload() {
-    // // Create a simple white ball
-    // this.make.graphics()
-    //     .fillStyle(0xffffff)
-    //     .fillCircle(16, 16, 16)
-    //     .generateTexture('ball', 32, 32);
-
     // golf ball sprite
     this.load.atlas('golf_ball', 'assets/golf_ball.png', 'assets/golf_ball.json');
 }
@@ -35,11 +31,11 @@ function create() {
     this.anims.create({
         key: 'golf_ball',
         frames: this.anims.generateFrameNames('golf_ball', {
-          prefix: 'golf_ball',
-          start: 0,
-          end: 3,
-          zeroPad: 1,
-          suffix: '.png'
+            prefix: 'golf_ball',
+            start: 0,
+            end: 3,
+            zeroPad: 1,
+            suffix: '.png'
         }),
         frameRate: 10,
         repeat: -1
@@ -55,15 +51,15 @@ function create() {
     cursors = this.input.keyboard.createCursorKeys();
 
     // Add title text
-    this.add.text(300, 50, 'Golf Ball Game', {
-        fontSize: '32px',
+    this.add.text(300, 50, 'Use arrow keys to move the ball', {
+        fontSize: '18px',
         fill: '#ffffff',
         stroke: '#000000',
-        strokeThickness: 3
+        strokeThickness: 2
     }).setOrigin(0.5);
 
-    this.add.text(300, 90, 'Use arrow keys to move the ball', {
-        fontSize: '18px',
+    debugText = this.add.text(50, 20, '', {
+        fontSize: '8px',
         fill: '#ffffff',
         stroke: '#000000',
         strokeThickness: 2
@@ -74,25 +70,39 @@ function create() {
 function update(time, delta) {
     // Ball movement controls - top-down style (using delta time for smooth movement)
     if (cursors.left.isDown) {
-        ball.x -= ballSpeed * (delta / 1000); // Move left
+        ballAccel.x -= ballSpeed * (delta / 100)
     }
     if (cursors.right.isDown) {
-        ball.x += ballSpeed * (delta / 1000); // Move right
+        ballAccel.x += ballSpeed * (delta / 100)
     }
     if (cursors.up.isDown) {
-        ball.y -= ballSpeed * (delta / 1000); // Move up
+        ballAccel.y -= ballSpeed * (delta / 100)
     }
     if (cursors.down.isDown) {
-        ball.y += ballSpeed * (delta / 1000); // Move down
+        ballAccel.y += ballSpeed * (delta / 100)
     }
+
+    ball.x += ballAccel.x * (delta / 10000); // Move left
+    ball.y += ballAccel.y * (delta / 10000); // Move up
+    BALL_FRICTION = 0.9995;
+    ballAccel.x *= BALL_FRICTION;
+    ballAccel.y *= BALL_FRICTION;
 
     // Round positions to avoid sub-pixel rendering (prevents blurriness)
     ball.x = Math.round(ball.x);
     ball.y = Math.round(ball.y);
 
+    ballAccel.x = Phaser.Math.Clamp(ballAccel.x, -10000, 10000);
+    ballAccel.y = Phaser.Math.Clamp(ballAccel.y, -10000, 10000);
     // Keep ball within screen bounds
+    ballTemp = { x: ball.x, y: ball.y };
     ball.x = Phaser.Math.Clamp(ball.x, 16, 584);
     ball.y = Phaser.Math.Clamp(ball.y, 16, 434);
+    if (ballTemp.x != ball.x) { ballAccel.x = -ballAccel.x; }
+    if (ballTemp.y != ball.y) { ballAccel.y = -ballAccel.y; }
+
+    // debug
+    debugText.setText(`[x: ${Math.round(ballAccel.x)}, y: ${Math.round(ballAccel.y)}]`);
 }
 
 // Start the game
