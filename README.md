@@ -2,11 +2,14 @@
 Inspiration: TagPro (slow and skillful momentum-based movement, fun boosts)
 
 Next steps:
-- one enemy
-- one boost
+- flesh out the level to look more like mini-golf (walls, etc)
+- add more balls. they should move randomly.
+- ball collision.
 
 Later:
 - boosts are stored and useable with a button (like mariocart)
+- game mechanic: you can do a sort of "parry" on an incoming ball. e.g. with spacebar. maybe this lets you store balls to later shoot back.
+    - possible implementation: an extended, spinning radius (golf club?) around hole that the balls have to be touching to parry.
 
 ### Instructions
 1. start the game
